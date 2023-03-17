@@ -24,4 +24,19 @@ describe("create Voucher test suite", () => {
       type: "conflict",
     });
   });
+
+  it("should create a voucher if there is no voucher with that code yet", async () => {
+    const voucher = {
+      code: "aaa",
+      discount: 10,
+    };
+
+    jest
+      .spyOn(voucherRepository, "getVoucherByCode")
+      .mockResolvedValueOnce(undefined);
+
+    const promise = voucherService.createVoucher(voucher.code, voucher.discount);
+
+    expect(promise).resolves.toBeUndefined();
+  });
 });
