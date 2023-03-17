@@ -74,4 +74,21 @@ describe("apply Voucher test suite", () => {
     expect(promise.finalAmount).toBe(amount);
     expect(promise.applied).toBe(false);
   });
+
+  it("should not apply discount for values under 100", async () => {
+    const code = "aaa";
+    const amount = 99;
+    const discount = 10;
+
+    jest
+      .spyOn(voucherRepository, "getVoucherByCode")
+      .mockResolvedValueOnce({ id: 1, code, discount, used: false });
+
+    const promise = await voucherService.applyVoucher(code, amount);
+
+    expect(promise.amount).toBe(amount);
+    expect(promise.discount).toBe(discount);
+    expect(promise.finalAmount).toBe(amount);
+    expect(promise.applied).toBe(false);
+  });
 });
