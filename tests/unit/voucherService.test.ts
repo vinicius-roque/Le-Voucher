@@ -40,3 +40,21 @@ describe("create Voucher test suite", () => {
     expect(promise).resolves.toBeUndefined();
   });
 });
+
+describe("apply Voucher test suite", () => {
+  it("should not apply discount in a invalid voucher", async () => {
+    const code = "aaa";
+    const amount = 100;
+
+    jest
+      .spyOn(voucherRepository, "getVoucherByCode")
+      .mockResolvedValueOnce(undefined);
+
+    const promise = voucherService.applyVoucher(code, amount);
+
+    expect(promise).rejects.toEqual({
+      message: "Voucher does not exist.",
+      type: "conflict",
+    });
+  });
+});
