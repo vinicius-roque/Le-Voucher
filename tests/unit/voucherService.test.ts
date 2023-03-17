@@ -57,4 +57,21 @@ describe("apply Voucher test suite", () => {
       type: "conflict",
     });
   });
+
+  it("should not apply discount in used vouchers", async () => {
+    const code = "aaa";
+    const amount = 100;
+    const discount = 10;
+
+    jest
+      .spyOn(voucherRepository, "getVoucherByCode")
+      .mockResolvedValueOnce({ id: 1, code, discount, used: true });
+
+    const promise = await voucherService.applyVoucher(code, amount);
+
+    expect(promise.amount).toBe(amount);
+    expect(promise.discount).toBe(discount);
+    expect(promise.finalAmount).toBe(amount);
+    expect(promise.applied).toBe(false);
+  });
 });
